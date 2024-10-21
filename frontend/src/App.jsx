@@ -4,11 +4,11 @@ import store from "./store";
 
 // Actions start ------
 import { action as adSigninAction } from "@/pages/admin/auth/AdSignin";
-import { action as adAddEditPlanAction } from "@/pages/admin/plans/AdAddEditPlan";
 
 // Loaders start ------
 import { loader as adLayoutLoader } from "@/pages/admin/AdLayout";
 import { loader as adAddEditPlanLoader } from "@/pages/admin/plans/AdAddEditPlan";
+import { loader as adListPlansLoader } from "@/pages/admin/plans/AdListPlans";
 
 const router = createBrowserRouter([
   // Website routes start ------
@@ -43,12 +43,15 @@ const router = createBrowserRouter([
         path: `masters/plan-attributes`,
         element: <Crm.AdListPlanAttributes />,
       },
-      { path: `masters/plans`, element: <Crm.AdListPlans /> },
+      {
+        path: `masters/plans`,
+        element: <Crm.AdListPlans />,
+        loader: adListPlansLoader,
+      },
       {
         path: `masters/plan/:slug?`,
         element: <Crm.AdAddEditPlan />,
         loader: adAddEditPlanLoader,
-        action: adAddEditPlanAction,
       },
     ],
   },

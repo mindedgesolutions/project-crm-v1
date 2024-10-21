@@ -3,6 +3,7 @@ const router = Router();
 import { adListUsers } from "../controller/admin/adUserController.js";
 import {
   activatePlanAttribute,
+  addNewPlan,
   addPlanAttribute,
   deleteListPlanAttribute,
   editPlanAttribute,
@@ -10,7 +11,10 @@ import {
   getListPlanAttributes,
   getListPlans,
 } from "../controller/admin/adPlanController.js";
-import { validatePlanAttribute } from "../middleware/planMiddleware.js";
+import {
+  validateAddPlan,
+  validatePlanAttribute,
+} from "../middleware/planMiddleware.js";
 
 router.get(`/users`, adListUsers);
 // Plan attribute related starts ------
@@ -27,7 +31,7 @@ router.get(`/plan-attributes/all`, getAllPlanAttributes);
 // Plan attribute related ends ------
 
 // Plan related starts ------
-router.route(`/plans`).get(getListPlans);
+router.route(`/plans`).post(validateAddPlan, addNewPlan).get(getListPlans);
 // Plan related ends ------
 
 export default router;

@@ -1,5 +1,6 @@
 import {
   AdContentWrapper,
+  AdPopover,
   PaginationContainer,
   SkeletonTableRow,
 } from "@/components";
@@ -13,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import customFetch from "@/utils/customFetch";
-import { serialNo } from "@/utils/functions";
+import { serialNo, tenureBadge } from "@/utils/functions";
 import { splitErrors } from "@/utils/splitErrors";
 import dayjs from "dayjs";
 import { Eye, Pencil, Trash2 } from "lucide-react";
@@ -71,6 +72,7 @@ const AdListPlans = () => {
               <TableHead>Name</TableHead>
               <TableHead>Tenure</TableHead>
               <TableHead>Price</TableHead>
+              <TableHead>Features</TableHead>
               <TableHead>Last Updated</TableHead>
               <TableHead></TableHead>
             </TableRow>
@@ -78,13 +80,16 @@ const AdListPlans = () => {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6}>
+                <TableCell colSpan={7}>
                   <SkeletonTableRow />
                 </TableCell>
               </TableRow>
             ) : plans.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center">
+                <TableCell
+                  colSpan={7}
+                  className="text-xs uppercase text-center"
+                >
                   NO DATA FOUND
                 </TableCell>
               </TableRow>
@@ -92,13 +97,16 @@ const AdListPlans = () => {
               plans?.map((plan, index) => {
                 const { name, tenure, price, updated_at } = plan;
                 return (
-                  <TableRow key={plan.id} className="group">
+                  <TableRow key={plan.id} className="text-xs uppercase group">
                     <TableCell className="font-medium">
                       {serialNo(page) + index}.
                     </TableCell>
                     <TableCell>{name}</TableCell>
-                    <TableCell>{tenure}</TableCell>
+                    <TableCell>{tenureBadge(tenure)}</TableCell>
                     <TableCell>{price}</TableCell>
+                    <TableCell>
+                      <AdPopover values={plan.details} />
+                    </TableCell>
                     <TableCell>
                       {dayjs(new Date(updated_at)).format("MMM D, YYYY h:mm A")}
                     </TableCell>
@@ -140,3 +148,15 @@ const AdListPlans = () => {
   );
 };
 export default AdListPlans;
+
+// Loader function starts ------
+export const loader = async () => {
+  try {
+    const response = await customFetch.get(`/admin/plan-attributes/all`);
+    const attributes = response.data.data.rows;
+    return { attributes };
+  } catch (error) {
+    splitErrors(error?.response?.data?.msg);
+    return error;
+  }
+};

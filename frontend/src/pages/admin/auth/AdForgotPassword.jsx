@@ -8,7 +8,7 @@ const AdForgotPassword = () => {
   document.title = `Forgot Password | ${import.meta.env.VITE_APP_TITLE}`;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 justify-center items-center gap-4">
+    <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 justify-center items-center gap-4">
       <div className="flex justify-end items-end">
         <div className="w-full md:max-w-md p-6">
           <div className="flex flex-col justify-center items-center space-y-8 mb-8">

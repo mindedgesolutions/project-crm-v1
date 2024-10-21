@@ -87,7 +87,10 @@ const AdListUsers = () => {
               </TableRow>
             ) : users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center">
+                <TableCell
+                  colSpan={7}
+                  className="text-center text-xs uppercase"
+                >
                   NO DATA FOUND
                 </TableCell>
               </TableRow>
@@ -95,7 +98,7 @@ const AdListUsers = () => {
               users?.map((user, index) => {
                 const { name, email, mobile, created_at, role } = user;
                 return (
-                  <TableRow key={user.id} className="group">
+                  <TableRow key={user.id} className="group text-xs uppercase">
                     <TableCell className="font-medium">
                       {serialNo(page) + index}.
                     </TableCell>
@@ -107,21 +110,21 @@ const AdListUsers = () => {
                       {dayjs(new Date(created_at)).format("MMM D, YYYY h:mm A")}
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-col justify-end items-center md:flex-row space-y-1 md:gap-4">
+                      <div className="flex flex-col justify-end items-center md:flex-row space-y-1 md:gap-8">
                         <button type="button">
                           <Eye
-                            size={18}
+                            size={16}
                             className="text-muted-foreground transition duration-200 group-hover:text-blue-500"
                           />
                         </button>
                         <button type="button">
                           <Pencil
-                            size={18}
+                            size={16}
                             className="text-muted-foreground transition duration-200 group-hover:text-yellow-500"
                           />
                         </button>
                         <button type="button">
-                          <Trash2 size={18} className="text-red-500" />
+                          <Trash2 size={16} className="text-red-500" />
                         </button>
                       </div>
                     </TableCell>

@@ -4,6 +4,7 @@ export { default as AdSidebar } from "./admin/globals/AdSidebar";
 export { default as AdFooter } from "./admin/globals/AdFooter";
 export { default as AdSubmitBtn } from "./admin/globals/AdSubmitBtn";
 export { default as AdProfileContainer } from "./admin/globals/AdProfileContainer";
+export { default as AdPopover } from "./admin/globals/AdPopover";
 export { default as AdUserFilter } from "./admin/users/AdUserFilter";
 export { default as AdAddEditPlanAttribute } from "./admin/plans/AdAddEditPlanAttribute";
 export { default as AdDeletePlanAttribute } from "./admin/plans/AdDeletePlanAttribute";

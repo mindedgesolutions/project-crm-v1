@@ -3,16 +3,19 @@ import { setCurrentUser } from "@/features/currentUserSlice";
 import customFetch from "@/utils/customFetch";
 import showError from "@/utils/showError";
 import { Outlet, redirect } from "react-router-dom";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AdLayout = () => {
   return (
     <div className="flex gap-0 md:gap-1">
       <AdSidebar />
-      <AdPageWrapper>
-        <AdTopnav />
-        <Outlet />
-        <AdFooter />
-      </AdPageWrapper>
+      <ScrollArea className="h-screen w-full">
+        <AdPageWrapper>
+          <AdTopnav />
+          <Outlet />
+          <AdFooter />
+        </AdPageWrapper>
+      </ScrollArea>
     </div>
   );
 };

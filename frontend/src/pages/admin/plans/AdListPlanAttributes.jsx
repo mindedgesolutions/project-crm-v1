@@ -89,7 +89,10 @@ const AdListPlanAttributes = () => {
                 </TableRow>
               ) : attributes.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center">
+                  <TableCell
+                    colSpan={5}
+                    className="text-xs uppercase text-center"
+                  >
                     NO DATA FOUND
                   </TableCell>
                 </TableRow>
@@ -97,7 +100,7 @@ const AdListPlanAttributes = () => {
                 attributes?.map((attr, index) => {
                   const { attribute, type, updated_at } = attr;
                   return (
-                    <TableRow key={attr.id} className="group">
+                    <TableRow key={attr.id} className="text-xs uppercase group">
                       <TableCell className="font-medium">
                         {serialNo(page) + index}.
                       </TableCell>

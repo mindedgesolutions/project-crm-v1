@@ -136,7 +136,24 @@ export const getListPlans = async (req, res) => {
   const pagination = paginationLogic(page, null);
 
   const data = await pool.query(
-    `select id, name, price, tenure, slug, id, updated_at from plans order by name offset $1 limit $2`,
+    `select pm.id,
+    pm.name,
+    pm.price,
+    pm.tenure,
+    pm.slug,
+    pm.id,
+    pm.updated_at,
+    json_agg(
+      json_build_object(
+        'plan_id', pd.plan_id,
+        'attr_id', pd.attr_id,
+        'attr_value', pd.attr_value
+      )
+    ) AS details
+    from plans pm
+    left join plan_details pd on pm.id = pd.plan_id
+    group by pm.id
+    order by pm.name offset $1 limit $2`,
     [pagination.offset, pagination.pageLimit]
   );
 
@@ -150,4 +167,67 @@ export const getListPlans = async (req, res) => {
   };
 
   res.status(StatusCodes.OK).json({ data, meta });
+};
+
+// ------
+export const addNewPlan = async (req, res) => {
+  const obj = { ...req.body };
+  const { name, shortDesc, tenure, price } = obj;
+  const planSlug = slug(name);
+  const timeStamp = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
+
+  try {
+    await pool.query(`BEGIN`);
+
+    const data = await pool.query(
+      `insert into plans(name, short_desc, price, created_at, updated_at, slug, tenure) values($1, $2, $3, $4, $5, $6, $7) returning id`,
+      [
+        name.trim(),
+        shortDesc.trim(),
+        price,
+        timeStamp,
+        timeStamp,
+        planSlug,
+        tenure,
+      ]
+    );
+
+    const planId = data.rows[0].id;
+
+    const arr = Object.entries(obj);
+
+    for (const element of arr) {
+      const field = element[0];
+      const value = element[1];
+
+      if (
+        field !== "name" &&
+        field !== "shortDesc" &&
+        field !== "tenure" &&
+        field !== "price"
+      ) {
+        const fieldId = await pool.query(
+          `select id from plan_attributes where name=$1`,
+          [field]
+        );
+
+        const dbValue = value || null;
+
+        await pool.query(
+          `insert into plan_details(plan_id, attr_id, attr_value) values($1, $2, $3)`,
+          [planId, fieldId.rows[0].id, dbValue]
+        );
+      }
+    }
+
+    await pool.query(`COMMIT`);
+
+    res.status(StatusCodes.CREATED).json({ data: `success` });
+  } catch (error) {
+    console.log(error);
+    await pool.query(`ROLLBACK`);
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ data: `something went wrong!!` });
+  }
 };

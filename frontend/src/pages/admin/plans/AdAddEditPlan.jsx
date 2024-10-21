@@ -6,22 +6,22 @@ import customFetch from "@/utils/customFetch";
 import { tenures } from "@/utils/data";
 import { splitErrors } from "@/utils/splitErrors";
 import { nanoid } from "nanoid";
-import { Form, useLoaderData, useNavigation } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import showSuccess from "@/utils/showSuccess";
 
 const AdAddEditPlan = () => {
   document.title = `Add New Plan | ${import.meta.env.VITE_APP_TITLE}`;
   const { attributes } = useLoaderData();
-  const navigation = useNavigation();
-  const isLoading = navigation.state === "submitting";
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     shortDesc: "",
     tenure: "",
     price: "",
   });
-  // const [dynamicData, setDynamicData] = useState([]);
   const [formState, setFormState] = useState({});
 
   useEffect(() => {
@@ -41,6 +41,22 @@ const AdAddEditPlan = () => {
     setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData);
+    try {
+      await customFetch.post(`/admin/plans`, data);
+      setIsLoading(false);
+      showSuccess(`Plan added`);
+      navigate(`/admin/masters/plans`);
+    } catch (error) {
+      setIsLoading(false);
+      splitErrors(error?.response?.data?.msg);
+    }
+  };
+
   return (
     <AdContentWrapper>
       <div className="flex flex-row justify-between items-center bg-muted my-4 p-2">
@@ -49,11 +65,11 @@ const AdAddEditPlan = () => {
         </h3>
       </div>
       <div className="my-4">
-        <Form method="post">
+        <form onSubmit={handleSubmit}>
           <div className="flex flex-row justify-between items-center gap-4 mb-2">
             <div className="basis-1/3 flex flex-col space-y-2">
               <Label
-                className="text-muted-foreground capitalize"
+                className="text-muted-foreground text-xs uppercase"
                 htmlFor="name"
               >
                 name <span className="text-red-500">*</span>
@@ -69,7 +85,7 @@ const AdAddEditPlan = () => {
             </div>
             <div className="basis-1/3 flex flex-col space-y-2">
               <Label
-                className="text-muted-foreground capitalize"
+                className="text-muted-foreground text-xs uppercase"
                 htmlFor="shortDesc"
               >
                 short description <span className="text-red-500">*</span>
@@ -85,7 +101,7 @@ const AdAddEditPlan = () => {
             </div>
             <div className="basis-1/3 flex flex-col space-y-2">
               <Label
-                className="text-muted-foreground capitalize"
+                className="text-muted-foreground text-xs uppercase"
                 htmlFor="tenure"
               >
                 tenure <span className="text-red-500">*</span>
@@ -111,7 +127,7 @@ const AdAddEditPlan = () => {
           <div className="flex flex-row justify-between items-center gap-4 mb-4">
             <div className="basis-1/3 flex flex-col space-y-2">
               <Label
-                className="text-muted-foreground capitalize"
+                className="text-muted-foreground text-xs uppercase"
                 htmlFor="price"
               >
                 price <span className="text-red-500">*</span>
@@ -132,15 +148,17 @@ const AdAddEditPlan = () => {
           <div className="flex flex-col mb-4">
             <div className="flex flex-row justify-between items-center bg-muted my-4 p-2">
               <h3 className="font-semibold tracking-widest text-muted-foreground">
-                Plan attributes
+                Plan Attributes
               </h3>
             </div>
             {attributes.map((attribute, index) => {
               return (
                 <div key={nanoid()}>
                   <div className="flex flex-row justify-start items-center text-muted-foreground gap-4 py-1">
-                    <span className="w-[50px]">{index + 1}.</span>
-                    <p className="min-w-96">{attribute.attribute}</p>
+                    <span className="w-[50px] text-xs">{index + 1}.</span>
+                    <p className="min-w-96 text-xs uppercase tracking-wider">
+                      {attribute.attribute}
+                    </p>
                     <span>
                       {attribute.type === "radio" ? (
                         <>
@@ -154,8 +172,11 @@ const AdAddEditPlan = () => {
                                 checked={formState[attribute.name] === "yes"}
                                 onChange={handleDbChange}
                               />
-                              <Label htmlFor={`${attribute.name}_yes`}>
-                                Yes
+                              <Label
+                                htmlFor={`${attribute.name}_yes`}
+                                className="text-xs"
+                              >
+                                YES
                               </Label>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -167,7 +188,12 @@ const AdAddEditPlan = () => {
                                 checked={formState[attribute.name] === "no"}
                                 onChange={handleDbChange}
                               />
-                              <Label htmlFor={`${attribute.name}_no`}>No</Label>
+                              <Label
+                                htmlFor={`${attribute.name}_no`}
+                                className="text-xs"
+                              >
+                                NO
+                              </Label>
                             </div>
                           </div>
                         </>
@@ -178,8 +204,8 @@ const AdAddEditPlan = () => {
                             name={attribute.name}
                             className="flex h-10 w-60 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none"
                             placeholder={`Enter ${attribute.attribute.toLowerCase()}`}
-                            // value={formState[attribute.name] || ""}
-                            // onChange={handleDbChange}
+                            value={formState[attribute.name] || ""}
+                            onChange={handleDbChange}
                           />
                         </>
                       )}
@@ -200,7 +226,7 @@ const AdAddEditPlan = () => {
               Back to Plans
             </Button>
           </div>
-        </Form>
+        </form>
       </div>
     </AdContentWrapper>
   );
@@ -217,12 +243,4 @@ export const loader = async () => {
     splitErrors(error?.response?.data?.msg);
     return error;
   }
-};
-
-// Action function starts ------
-export const action = async ({ request }) => {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData);
-  console.log(data);
-  return null;
 };

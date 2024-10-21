@@ -7,10 +7,12 @@ import CryptoJS from "crypto-js";
 export const adUserBadge = (type) => {
   switch (type) {
     case "Super Admin":
-      return <Badge className="bg-primary/80">{type}</Badge>;
+      return <Badge className="text-[10px] bg-primary/80">{type}</Badge>;
 
     default:
-      return <Badge className="bg-muted-foreground/90">{type}</Badge>;
+      return (
+        <Badge className="text-[10px] bg-muted-foreground/90">{type}</Badge>
+      );
   }
 };
 
@@ -25,6 +27,20 @@ export const activeBadge = (status) => {
     case false:
       return (
         <Badge className="bg-red-400 group-hover:bg-red-500">Inactive</Badge>
+      );
+  }
+};
+
+// ------
+export const tenureBadge = (tenure) => {
+  switch (tenure) {
+    case 1:
+      return <Badge className="text-[10px] bg-primary/80">monthly</Badge>;
+    case 3:
+      return <Badge className="text-[10px] bg-primary/80">quarterly</Badge>;
+    case 12:
+      return (
+        <Badge className="text-[10px] bg-muted-foreground/90">yearly</Badge>
       );
   }
 };
