@@ -2,14 +2,18 @@ import { Router } from "express";
 const router = Router();
 import { adListUsers } from "../controller/admin/adUserController.js";
 import {
+  activatePlan,
   activatePlanAttribute,
   addNewPlan,
   addPlanAttribute,
   deleteListPlanAttribute,
+  deletePlan,
   editPlanAttribute,
+  editPlanDetails,
   getAllPlanAttributes,
   getListPlanAttributes,
   getListPlans,
+  getSinglePlan,
 } from "../controller/admin/adPlanController.js";
 import {
   validateAddPlan,
@@ -32,6 +36,12 @@ router.get(`/plan-attributes/all`, getAllPlanAttributes);
 
 // Plan related starts ------
 router.route(`/plans`).post(validateAddPlan, addNewPlan).get(getListPlans);
+router
+  .route(`/plans/:id`)
+  .get(getSinglePlan)
+  .put(validateAddPlan, editPlanDetails)
+  .delete(deletePlan);
+router.put(`/plan/activate/:id`, activatePlan);
 // Plan related ends ------
 
 export default router;

@@ -20,13 +20,11 @@ export const adUserBadge = (type) => {
 export const activeBadge = (status) => {
   switch (status) {
     case true:
-      return (
-        <Badge className="bg-green-400 group-hover:bg-green-500">Active</Badge>
-      );
+      return <Badge className="text-[10px] bg-primary/80">Active</Badge>;
 
     case false:
       return (
-        <Badge className="bg-red-400 group-hover:bg-red-500">Inactive</Badge>
+        <Badge className="text-[10px] bg-muted-foreground/90">Inactive</Badge>
       );
   }
 };

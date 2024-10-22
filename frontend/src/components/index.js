@@ -8,6 +8,7 @@ export { default as AdPopover } from "./admin/globals/AdPopover";
 export { default as AdUserFilter } from "./admin/users/AdUserFilter";
 export { default as AdAddEditPlanAttribute } from "./admin/plans/AdAddEditPlanAttribute";
 export { default as AdDeletePlanAttribute } from "./admin/plans/AdDeletePlanAttribute";
+export { default as AdDeletePlan } from "./admin/plans/AdDeletePlan";
 // Admin components end ------
 
 // Wrappers start ------

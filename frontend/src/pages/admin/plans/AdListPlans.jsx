@@ -1,5 +1,6 @@
 import {
   AdContentWrapper,
+  AdDeletePlan,
   AdPopover,
   PaginationContainer,
   SkeletonTableRow,
@@ -13,12 +14,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { updateCounter } from "@/features/commonSlice";
 import customFetch from "@/utils/customFetch";
-import { serialNo, tenureBadge } from "@/utils/functions";
+import {
+  activeBadge,
+  currencyFormat,
+  serialNo,
+  tenureBadge,
+} from "@/utils/functions";
+import showSuccess from "@/utils/showSuccess";
 import { splitErrors } from "@/utils/splitErrors";
 import dayjs from "dayjs";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, ThumbsUp, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
 const AdListPlans = () => {
@@ -31,6 +40,8 @@ const AdListPlans = () => {
   const { search } = useLocation();
   const queryString = new URLSearchParams(search);
   const page = queryString.get("page");
+  const { counter } = useSelector((store) => store.common);
+  const dispatch = useDispatch();
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -50,9 +61,21 @@ const AdListPlans = () => {
     }
   };
 
+  const activate = async (id) => {
+    setIsLoading(true);
+    try {
+      await customFetch.put(`/admin/plan/activate/${id}`);
+      showSuccess(`Plan activated`);
+      dispatch(updateCounter());
+    } catch (error) {
+      setIsLoading(false);
+      splitErrors(error?.response?.data?.msg);
+    }
+  };
+
   useEffect(() => {
     fetchData();
-  }, [page, queryString.get("type"), queryString.get("search")]);
+  }, [page, queryString.get("type"), queryString.get("search"), counter]);
 
   return (
     <AdContentWrapper>
@@ -74,6 +97,7 @@ const AdListPlans = () => {
               <TableHead>Price</TableHead>
               <TableHead>Features</TableHead>
               <TableHead>Last Updated</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -103,32 +127,45 @@ const AdListPlans = () => {
                     </TableCell>
                     <TableCell>{name}</TableCell>
                     <TableCell>{tenureBadge(tenure)}</TableCell>
-                    <TableCell>{price}</TableCell>
+                    <TableCell>{currencyFormat().format(price)}</TableCell>
                     <TableCell>
                       <AdPopover values={plan.details} />
                     </TableCell>
                     <TableCell>
                       {dayjs(new Date(updated_at)).format("MMM D, YYYY h:mm A")}
                     </TableCell>
+                    <TableCell>{activeBadge(plan.is_active)}</TableCell>
                     <TableCell>
                       <div className="flex flex-col justify-end items-center md:flex-row space-y-1 md:gap-4">
-                        <button type="button">
-                          <Eye
-                            size={18}
-                            className="text-muted-foreground transition duration-200 group-hover:text-blue-500"
-                          />
-                        </button>
-                        <Link to={`/admin/masters/plan/${plan.slug}`}>
-                          <button type="button">
-                            <Pencil
+                        {plan.is_active ? (
+                          <>
+                            <button type="button">
+                              <Eye
+                                size={18}
+                                className="text-muted-foreground transition duration-200 group-hover:text-blue-500"
+                              />
+                            </button>
+                            <Link to={`/admin/masters/plan/${plan.id}`}>
+                              <button type="button">
+                                <Pencil
+                                  size={18}
+                                  className="text-muted-foreground transition duration-200 group-hover:text-yellow-500"
+                                />
+                              </button>
+                            </Link>
+                            <AdDeletePlan deleteId={plan.id} />
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => activate(plan.id)}
+                          >
+                            <ThumbsUp
                               size={18}
-                              className="text-muted-foreground transition duration-200 group-hover:text-yellow-500"
+                              className="text-muted-foreground transition duration-200 group-hover:text-green-500"
                             />
                           </button>
-                        </Link>
-                        <button type="button">
-                          <Trash2 size={18} className="text-red-500" />
-                        </button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>

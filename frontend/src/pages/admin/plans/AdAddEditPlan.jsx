@@ -6,29 +6,36 @@ import customFetch from "@/utils/customFetch";
 import { tenures } from "@/utils/data";
 import { splitErrors } from "@/utils/splitErrors";
 import { nanoid } from "nanoid";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import showSuccess from "@/utils/showSuccess";
 
 const AdAddEditPlan = () => {
-  document.title = `Add New Plan | ${import.meta.env.VITE_APP_TITLE}`;
-  const { attributes } = useLoaderData();
+  const { attributes, plan, dynamic } = useLoaderData();
+  const { id } = useParams();
+  document.title = `${plan ? `${plan.name} (Edit Plan)` : `Add New Plan`} | ${
+    import.meta.env.VITE_APP_TITLE
+  }`;
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    name: "",
-    shortDesc: "",
-    tenure: "",
-    price: "",
+    name: plan?.name || "",
+    shortDesc: plan?.short_desc || "",
+    tenure: plan?.tenure || "",
+    price: plan?.price || "",
   });
   const [formState, setFormState] = useState({});
 
   useEffect(() => {
-    const initialState = {};
-    attributes.forEach((field) => {
-      initialState[field.name] = field.type === "radio" ? "" : "";
-    });
+    let initialState = {};
+    if (plan) {
+      initialState = dynamic;
+    } else {
+      attributes.forEach((field) => {
+        initialState[field.name] = field.type === "radio" ? "" : "";
+      });
+    }
     setFormState(initialState);
   }, []);
 
@@ -46,10 +53,14 @@ const AdAddEditPlan = () => {
     setIsLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData);
+    const api = plan ? `/admin/plans/${id}` : `/admin/plans`;
+    const process = plan ? customFetch.put : customFetch.post;
+    const msg = plan ? `Changes saved` : `Plan added`;
+
     try {
-      await customFetch.post(`/admin/plans`, data);
+      await process(api, data);
       setIsLoading(false);
-      showSuccess(`Plan added`);
+      showSuccess(msg);
       navigate(`/admin/masters/plans`);
     } catch (error) {
       setIsLoading(false);
@@ -61,7 +72,7 @@ const AdAddEditPlan = () => {
     <AdContentWrapper>
       <div className="flex flex-row justify-between items-center bg-muted my-4 p-2">
         <h3 className="font-bold text-xl tracking-widest text-muted-foreground">
-          Add New Plan
+          {plan ? `${plan.name} (Edit Plan)` : `Add New Plan`}
         </h3>
       </div>
       <div className="my-4">
@@ -219,7 +230,7 @@ const AdAddEditPlan = () => {
           <div className="flex flex-row justify-center items-center my-8 gap-4">
             <AdSubmitBtn
               isLoading={isLoading}
-              text={`add plan`}
+              text={plan ? `save changes` : `add plan`}
               addClass={`w-auto`}
             />
             <Button type="button" variant="outline" className="uppercase">
@@ -234,11 +245,19 @@ const AdAddEditPlan = () => {
 export default AdAddEditPlan;
 
 // Loader function starts ------
-export const loader = async () => {
+export const loader = async ({ params }) => {
+  const { id } = params;
   try {
     const response = await customFetch.get(`/admin/plan-attributes/all`);
     const attributes = response.data.data.rows;
-    return { attributes };
+    let plan = null;
+    let dynamic = null;
+    if (id) {
+      const response = await customFetch.get(`/admin/plans/${id}`);
+      plan = response.data.data.rows[0];
+      dynamic = response.data.dynamic;
+    }
+    return { attributes, plan, dynamic };
   } catch (error) {
     splitErrors(error?.response?.data?.msg);
     return error;

@@ -49,7 +49,7 @@ const router = createBrowserRouter([
         loader: adListPlansLoader,
       },
       {
-        path: `masters/plan/:slug?`,
+        path: `masters/plan/:id?`,
         element: <Crm.AdAddEditPlan />,
         loader: adAddEditPlanLoader,
       },
