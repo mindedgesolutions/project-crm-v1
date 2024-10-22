@@ -5,19 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import customFetch from "@/utils/customFetch";
 import { splitErrors } from "@/utils/splitErrors";
-import showSuccess from "@/utils/showSuccess";
 import { Eye } from "lucide-react";
 import { useEffect, useState } from "react";
-import {
-  Form,
-  Link,
-  redirect,
-  useNavigate,
-  useNavigation,
-} from "react-router-dom";
+import { Form, Link, useNavigate, useNavigation } from "react-router-dom";
 
-const AdSignin = () => {
-  document.title = `Admin Sign In | ${import.meta.env.VITE_APP_TITLE}`;
+const CSignin = () => {
+  document.title = `Sign In | ${import.meta.env.VITE_APP_TITLE}`;
   const [type, setType] = useState("password");
   const navigation = useNavigation();
   const navigate = useNavigate();
@@ -28,11 +21,13 @@ const AdSignin = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const loginStatus = async () => {
+  const loginStatusCompany = async () => {
     try {
-      const response = await customFetch.get(`/auth/check-login`);
+      const response = await customFetch.get(`/auth/company/check-login`);
       if (response.data.status === true) {
-        navigate(`/admin/dashboard`);
+        // navigate(`/user/dashboard`);
+        // navigate(`/company/dashboard`);
+        console.log(`OK`);
       }
     } catch (error) {
       splitErrors(error?.response?.data?.msg);
@@ -41,7 +36,7 @@ const AdSignin = () => {
   };
 
   useEffect(() => {
-    loginStatus();
+    loginStatusCompany();
   }, []);
 
   return (
@@ -133,14 +128,14 @@ const AdSignin = () => {
     </div>
   );
 };
-export default AdSignin;
+export default CSignin;
 
 // Action function starts ------
 export const action = async ({ request }) => {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
   try {
-    const response = await customFetch.post(`/auth/sign-in`, data);
+    const response = await customFetch.post(`/auth/company/sign-in`, data);
     showSuccess(`Welcome ${response.data.data.name}`);
     return redirect(`/admin/dashboard`);
   } catch (error) {

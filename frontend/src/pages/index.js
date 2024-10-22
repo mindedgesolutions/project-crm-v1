@@ -17,3 +17,10 @@ export { default as AdListPlanAttributes } from "./admin/plans/AdListPlanAttribu
 export { default as AdListPlans } from "./admin/plans/AdListPlans";
 export { default as AdAddEditPlan } from "./admin/plans/AdAddEditPlan";
 // Admin pages end ------
+
+// Company pages start ------
+export { default as CSignin } from "./company/cauth/CSignin";
+export { default as CForgotPassword } from "./company/cauth/CForgotPassword";
+export { default as CResetPassword } from "./company/cauth/CResetPassword";
+export { default as CDashboard } from "./company/CDashboard";
+// Company pages end ------

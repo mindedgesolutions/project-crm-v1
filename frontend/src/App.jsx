@@ -4,6 +4,7 @@ import store from "./store";
 
 // Actions start ------
 import { action as adSigninAction } from "@/pages/admin/auth/AdSignin";
+import { action as cSigninAction } from "@/pages/company/cauth/CSignin";
 
 // Loaders start ------
 import { loader as adLayoutLoader } from "@/pages/admin/AdLayout";
@@ -26,14 +27,14 @@ const router = createBrowserRouter([
 
   // Admin routes start ------
   {
-    path: `/admin/sign-in`,
+    path: `admin/sign-in`,
     element: <Crm.AdSignin />,
     action: adSigninAction,
   },
-  { path: `/admin/forgot-password`, element: <Crm.AdForgotPassword /> },
-  { path: `/admin/reset-password`, element: <Crm.AdResetPassword /> },
+  { path: `admin/forgot-password`, element: <Crm.AdForgotPassword /> },
+  { path: `admin/reset-password`, element: <Crm.AdResetPassword /> },
   {
-    path: `/admin`,
+    path: `admin`,
     element: <Crm.AdLayout />,
     loader: adLayoutLoader(store),
     children: [
@@ -56,6 +57,16 @@ const router = createBrowserRouter([
     ],
   },
   // Admin routes end ------
+
+  // Company routes start ------
+  { path: `sign-in`, element: <Crm.CSignin />, action: cSigninAction },
+  { path: `forgot-password`, element: <Crm.CForgotPassword /> },
+  { path: `reset-password`, element: <Crm.CResetPassword /> },
+  {
+    path: `:companySlug`,
+    children: [{ path: `dashboard`, element: <Crm.CDashboard /> }],
+  },
+  // Company routes end ------
 ]);
 
 function App() {
