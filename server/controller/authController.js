@@ -50,6 +50,47 @@ export const signIn = async (req, res) => {
 };
 
 // ------
+export const cSignIn = async (req, res) => {
+  const { username, password, remember } = req.body;
+
+  const checkUsername = await pool.query(
+    `select count(*) from users where email=$1 and is_active=true`,
+    [username]
+  );
+  if (Number(checkUsername.rows[0].count) === 0)
+    throw new BadRequestError(`Incorrect username`);
+
+  const user = await pool.query(
+    `select u.*, c.slug as cslug from users u join companies c on u.company_id = c.id where u.email=$1 and u.is_active=true and c.is_active=true`,
+    [username]
+  );
+
+  const checkPass = await checkPassword(password, user.rows[0].password);
+
+  if (!checkPass) throw new BadRequestError(`Incorrect password`);
+
+  const payload = {
+    uuid: user.rows[0].uuid,
+  };
+  const oneDay = 1000 * 60 * 60 * 24;
+  const oneMonth = 1000 * 60 * 60 * 24 * 30;
+
+  const token = createJWT(payload, remember);
+
+  const expiryDate = remember
+    ? new Date(Date.now() + oneMonth)
+    : new Date(Date.now() + oneDay);
+
+  res.cookie("token_crm", token, {
+    httpOnly: true,
+    expires: expiryDate,
+    secure: process.env.APP_ENV === "production",
+  });
+
+  res.status(StatusCodes.ACCEPTED).json({ data: user.rows[0], token: token });
+};
+
+// ------
 export const currentUser = async (req, res) => {
   const { token_crm } = req.cookies;
   const { uuid } = verifyJWT(token_crm);

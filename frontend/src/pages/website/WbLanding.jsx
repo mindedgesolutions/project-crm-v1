@@ -12,6 +12,9 @@ const WbLanding = () => {
         <Link to={`/sign-up`}>
           <Button>Company Register</Button>
         </Link>
+        <Link to={`/sign-in`}>
+          <Button>Company Login</Button>
+        </Link>
       </div>
     </div>
   );

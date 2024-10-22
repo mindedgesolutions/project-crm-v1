@@ -1,8 +1,8 @@
 export const userType = [
   { typeId: 1, typeLabel: "Super Admin" },
-  { typeId: 2, typeLabel: "Company Admin" },
-  { typeId: 3, typeLabel: "Company Manager" },
-  { typeId: 2, typeLabel: "Company User" },
+  { typeId: 2, typeLabel: "Admin" },
+  { typeId: 3, typeLabel: "Manager" },
+  { typeId: 2, typeLabel: "User" },
 ];
 
 export const fieldTypes = ["text", "radio"];
