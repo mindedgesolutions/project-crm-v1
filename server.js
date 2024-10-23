@@ -14,6 +14,7 @@ import { protectAdminRoute } from "./server/middleware/authMiddleware.js";
 // Routes ------
 import authRoutes from "./server/routes/authRoutes.js";
 import adminRoutes from "./server/routes/adminRoutes.js";
+import csvRoutes from "./server/routes/csvRoutes.js";
 
 // public ------
 import { dirname } from "path";
@@ -37,6 +38,7 @@ app.use(express.json());
 // API starts ---
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", protectAdminRoute, adminRoutes);
+app.use("/api/company", [csvRoutes]);
 // API ends ---
 
 app.get("*", (req, res) => {

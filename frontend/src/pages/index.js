@@ -26,4 +26,6 @@ export { default as CResetPassword } from "./company/cauth/CResetPassword";
 export { default as CDashboard } from "./company/CDashboard";
 export { default as CLayout } from "./company/CLayout";
 export { default as CError } from "./company/CError";
+export { default as CListCsvUploads } from "./company/csv/CListCsvUploads";
+export { default as CUploadCsv } from "./company/csv/CUploadCsv";
 // Company pages end ------

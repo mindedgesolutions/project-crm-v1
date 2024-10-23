@@ -69,7 +69,11 @@ const router = createBrowserRouter([
     element: <Crm.CLayout />,
     loader: cLayoutLoader(store),
     errorElement: <Crm.CError />,
-    children: [{ path: `dashboard`, element: <Crm.CDashboard /> }],
+    children: [
+      { path: `dashboard`, element: <Crm.CDashboard /> },
+      { path: `csv-uploads`, element: <Crm.CListCsvUploads /> },
+      { path: `upload-csv`, element: <Crm.CUploadCsv /> },
+    ],
   },
   // Company routes end ------
 ]);

@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { AlignJustify, Home, Settings, Users2 } from "lucide-react";
+import {
+  AlignJustify,
+  CloudUpload,
+  Home,
+  Settings,
+  Users2,
+} from "lucide-react";
 import CSubmenu from "./CSubmenu";
 import { useSelector } from "react-redux";
 
@@ -119,12 +125,14 @@ const CSidebar = () => {
             </li>
             <li>
               <NavLink
-                to={`/admin/users`}
+                to={`/app/${currentUser.cslug}/csv-uploads`}
                 className={`w-full flex flex-row justify-start items-center p-2 gap-3 rounded-lg hover:bg-card ${
-                  pathname === `/admin/users` ? "bg-card" : null
+                  pathname === `/app/${currentUser.cslug}/csv-uploads`
+                    ? "bg-card"
+                    : null
                 }`}
               >
-                <Users2 size={15} className="text-muted-foreground" />
+                <CloudUpload size={15} className="text-muted-foreground" />
                 <p className="text-muted-foreground text-[0.7rem] uppercase font-semibold tracking-widest">
                   upload csv
                 </p>
