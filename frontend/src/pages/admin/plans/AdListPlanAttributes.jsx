@@ -7,7 +7,7 @@ import {
 } from "@/components";
 import customFetch from "@/utils/customFetch";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { serialNo } from "@/utils/functions";
 import dayjs from "dayjs";
-import { Pencil, ThumbsUp, Trash2 } from "lucide-react";
+import { Pencil, ThumbsUp } from "lucide-react";
 import { useSelector } from "react-redux";
 import { splitErrors } from "@/utils/splitErrors";
 
@@ -32,6 +32,7 @@ const AdListPlanAttributes = () => {
   const queryString = new URLSearchParams(search);
   const page = queryString.get("page");
   const { counter } = useSelector((store) => store.common);
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -44,6 +45,12 @@ const AdListPlanAttributes = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(true);
+      if (error?.response?.status === 401) {
+        splitErrors(error?.response?.data?.msg);
+        navigate(`/`);
+      } else {
+        splitErrors(error?.response?.data?.msg);
+      }
       return null;
     }
   };

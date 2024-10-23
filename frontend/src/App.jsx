@@ -10,6 +10,7 @@ import { action as cSigninAction } from "@/pages/company/cauth/CSignin";
 import { loader as adLayoutLoader } from "@/pages/admin/AdLayout";
 import { loader as adAddEditPlanLoader } from "@/pages/admin/plans/AdAddEditPlan";
 import { loader as adListPlansLoader } from "@/pages/admin/plans/AdListPlans";
+import { loader as cLayoutLoader } from "@/pages/company/CLayout";
 
 const router = createBrowserRouter([
   // Website routes start ------
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
     path: `admin`,
     element: <Crm.AdLayout />,
     loader: adLayoutLoader(store),
+    errorElement: <Crm.AdError />,
     children: [
       { path: `dashboard`, element: <Crm.AdDashboard /> },
       { path: `users`, element: <Crm.AdListUsers /> },
@@ -63,7 +65,10 @@ const router = createBrowserRouter([
   { path: `forgot-password`, element: <Crm.CForgotPassword /> },
   { path: `reset-password`, element: <Crm.CResetPassword /> },
   {
-    path: `:companySlug`,
+    path: `app/:companySlug`,
+    element: <Crm.CLayout />,
+    loader: cLayoutLoader(store),
+    errorElement: <Crm.CError />,
     children: [{ path: `dashboard`, element: <Crm.CDashboard /> }],
   },
   // Company routes end ------

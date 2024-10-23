@@ -25,10 +25,10 @@ import {
 import showSuccess from "@/utils/showSuccess";
 import { splitErrors } from "@/utils/splitErrors";
 import dayjs from "dayjs";
-import { Eye, Pencil, ThumbsUp, Trash2 } from "lucide-react";
+import { Eye, Pencil, ThumbsUp } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const AdListPlans = () => {
   document.title = `List of Available Plans | ${
@@ -42,6 +42,7 @@ const AdListPlans = () => {
   const page = queryString.get("page");
   const { counter } = useSelector((store) => store.common);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -56,7 +57,12 @@ const AdListPlans = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(true);
-      splitErrors(error?.response?.data?.msg);
+      if (error?.response?.status === 401) {
+        splitErrors(error?.response?.data?.msg);
+        navigate(`/`);
+      } else {
+        splitErrors(error?.response?.data?.msg);
+      }
       return null;
     }
   };

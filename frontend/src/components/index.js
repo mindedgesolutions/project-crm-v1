@@ -16,5 +16,15 @@ export { default as AdPageWrapper } from "./wrappers/AdPageWrapper";
 export { default as AdContentWrapper } from "./wrappers/AdContentWrapper";
 // Wrappers end ------
 
+// Common starts ------
 export { default as SkeletonTableRow } from "./SkeletonTableRow";
 export { default as PaginationContainer } from "./PaginationContainer";
+// Common ends ------
+
+// Company components start ------
+export { default as CTopnav } from "./company/globals/CTopnav";
+export { default as CSidebar } from "./company/globals/CSidebar";
+export { default as CFooter } from "./company/globals/CFooter";
+export { default as CSubmitBtn } from "./company/globals/CSubmitBtn";
+export { default as CProfileContainer } from "./company/globals/CProfileContainer";
+// Company components end ------

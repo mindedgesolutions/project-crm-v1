@@ -12,6 +12,7 @@ export { default as AdForgotPassword } from "./admin/auth/AdForgotPassword";
 export { default as AdResetPassword } from "./admin/auth/AdResetPassword";
 export { default as AdLayout } from "./admin/AdLayout";
 export { default as AdDashboard } from "./admin/AdDashboard";
+export { default as AdError } from "./admin/AdError";
 export { default as AdListUsers } from "./admin/users/AdListUsers";
 export { default as AdListPlanAttributes } from "./admin/plans/AdListPlanAttributes";
 export { default as AdListPlans } from "./admin/plans/AdListPlans";
@@ -23,4 +24,6 @@ export { default as CSignin } from "./company/cauth/CSignin";
 export { default as CForgotPassword } from "./company/cauth/CForgotPassword";
 export { default as CResetPassword } from "./company/cauth/CResetPassword";
 export { default as CDashboard } from "./company/CDashboard";
+export { default as CLayout } from "./company/CLayout";
+export { default as CError } from "./company/CError";
 // Company pages end ------

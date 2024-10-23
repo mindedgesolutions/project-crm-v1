@@ -19,7 +19,7 @@ import { splitErrors } from "@/utils/splitErrors";
 import dayjs from "dayjs";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AdListUsers = () => {
   document.title = `List of Users | ${import.meta.env.VITE_APP_TITLE}`;
@@ -29,6 +29,7 @@ const AdListUsers = () => {
   const { search } = useLocation();
   const queryString = new URLSearchParams(search);
   const page = queryString.get("page");
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -45,7 +46,12 @@ const AdListUsers = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(true);
-      splitErrors(error?.response?.data?.msg);
+      if (error?.response?.status === 401) {
+        splitErrors(error?.response?.data?.msg);
+        navigate(`/`);
+      } else {
+        splitErrors(error?.response?.data?.msg);
+      }
       return null;
     }
   };

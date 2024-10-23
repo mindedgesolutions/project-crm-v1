@@ -4,10 +4,18 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import customFetch from "@/utils/customFetch";
+import showSuccess from "@/utils/showSuccess";
 import { splitErrors } from "@/utils/splitErrors";
 import { Eye } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Form, Link, useNavigate, useNavigation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import {
+  Form,
+  Link,
+  redirect,
+  useNavigate,
+  useNavigation,
+} from "react-router-dom";
 
 const CSignin = () => {
   document.title = `Sign In | ${import.meta.env.VITE_APP_TITLE}`;
@@ -16,23 +24,22 @@ const CSignin = () => {
   const navigate = useNavigate();
   const isLoading = navigation.state === "submitting";
   const [form, setForm] = useState({ username: "", password: "" });
+  const { currentUser } = useSelector((store) => store.currentUser);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const loginStatusCompany = async () => {
-    try {
-      const response = await customFetch.get(`/auth/company/check-login`);
-      if (response.data.status === true) {
-        // navigate(`/user/dashboard`);
-        // navigate(`/company/dashboard`);
-        console.log(`OK`);
-      }
-    } catch (error) {
-      splitErrors(error?.response?.data?.msg);
-      console.log(error);
-    }
+    // try {
+    //   const response = await customFetch.get(`/auth/company/check-login`);
+    //   if (response.data.status === true && currentUser) {
+    //     navigate(`/app/${currentUser.cslug}/dashboard`);
+    //   }
+    // } catch (error) {
+    //   splitErrors(error?.response?.data?.msg);
+    //   console.log(error);
+    // }
   };
 
   useEffect(() => {
@@ -136,8 +143,9 @@ export const action = async ({ request }) => {
   const data = Object.fromEntries(formData);
   try {
     const response = await customFetch.post(`/auth/company/sign-in`, data);
+    const cslug = response.data.data.cslug;
     showSuccess(`Welcome ${response.data.data.name}`);
-    return redirect(`/admin/dashboard`);
+    return redirect(`/app/${cslug}/dashboard`);
   } catch (error) {
     splitErrors(error?.response?.data?.msg);
     return null;
