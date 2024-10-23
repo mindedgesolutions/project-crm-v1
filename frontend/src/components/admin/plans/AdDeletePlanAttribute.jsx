@@ -9,20 +9,24 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { updateCounter } from "@/features/commonSlice";
 import customFetch from "@/utils/customFetch";
 import showSuccess from "@/utils/showSuccess";
 import { splitErrors } from "@/utils/splitErrors";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 const AdDeletePlanAttribute = ({ deleteId }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleDelete = async () => {
     setIsLoading(true);
     try {
       await customFetch.delete(`/admin/plan-attributes/${deleteId}`);
       setIsLoading(false);
+      dispatch(updateCounter());
       showSuccess(`Attribute deactivated`);
     } catch (error) {
       setIsLoading(false);
@@ -51,7 +55,7 @@ const AdDeletePlanAttribute = ({ deleteId }) => {
           <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             disabled={isLoading}
-            className="bg-destructive"
+            className="bg-destructive hover:bg-destructive"
             onClick={handleDelete}
           >
             Delete
