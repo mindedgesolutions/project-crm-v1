@@ -16,7 +16,7 @@ import customFetch from "@/utils/customFetch";
 import { unsetCurrentUser } from "@/features/currentUserSlice";
 import showSuccess from "@/utils/showSuccess";
 
-const AdProfileContainer = () => {
+const CProfileContainer = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -60,4 +60,4 @@ const AdProfileContainer = () => {
     </DropdownMenu>
   );
 };
-export default AdProfileContainer;
+export default CProfileContainer;

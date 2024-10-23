@@ -3,7 +3,8 @@ import { useMediaQuery } from "react-responsive";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AlignJustify, Home, Settings, Users2 } from "lucide-react";
-import AdSubmenu from "./AdSubmenu";
+import CSubmenu from "./CSubmenu";
+import { useSelector } from "react-redux";
 
 const subMenusList = [
   {
@@ -16,11 +17,12 @@ const subMenusList = [
   },
 ];
 
-const AdSidebar = () => {
+const CSidebar = () => {
   let isTabletMid = useMediaQuery({ query: "(max-width: 768px)" });
   const [open, setOpen] = useState(isTabletMid ? false : true);
   const sidebarRef = useRef();
   const { pathname } = useLocation();
+  const { currentUser } = useSelector((store) => store.currentUser);
 
   useEffect(() => {
     isTabletMid ? setOpen(false) : setOpen(true);
@@ -79,7 +81,7 @@ const AdSidebar = () => {
         className="bg-muted text-muted-foreground z-10 max-w-[16rem] w-[16rem] overflow-hidden md:relative fixed h-screen"
       >
         <div className="flex justify-center items-center my-2 p-2">
-          <Link to={`/admin/dashboard`}>
+          <Link to={`/app/${currentUser.cslug}/dashboard`}>
             <h3 className="text-3xl font-bold tracking-widest text-primary">
               CRM
             </h3>
@@ -89,14 +91,29 @@ const AdSidebar = () => {
           <ul className="whitespace-pre px-2.5 text-[0.9rem] py-4 flex flex-col gap-1 font-medium overflow-x-hidden scrollbar-thin scrollbar-track-white scrollbar-thumb-slate-100 md:h-[68%] h-[70%]">
             <li>
               <NavLink
-                to={`/admin/dashboard`}
+                to={`/app/${currentUser.cslug}/dashboard`}
                 className={`w-full flex flex-row justify-start items-center p-2 gap-3 rounded-lg hover:bg-card ${
-                  pathname === `/admin/dashboard` ? "bg-card" : null
+                  pathname === `/app/${currentUser.cslug}/dashboard`
+                    ? "bg-card"
+                    : null
                 }`}
               >
                 <Home size={15} className="text-muted-foreground" />
-                <p className="text-muted-foreground text-[0.7rem] uppercase font-medium tracking-widest">
+                <p className="text-muted-foreground text-[0.7rem] uppercase font-semibold tracking-widest">
                   Dashboard
+                </p>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={`#`}
+                className={`w-full flex flex-row justify-start items-center p-2 gap-3 rounded-lg hover:bg-card ${
+                  pathname === `#` ? "bg-card" : null
+                }`}
+              >
+                <Users2 size={15} className="text-muted-foreground" />
+                <p className="text-muted-foreground text-[0.7rem] uppercase font-semibold tracking-widest">
+                  Users
                 </p>
               </NavLink>
             </li>
@@ -108,15 +125,15 @@ const AdSidebar = () => {
                 }`}
               >
                 <Users2 size={15} className="text-muted-foreground" />
-                <p className="text-muted-foreground text-[0.7rem] uppercase font-medium tracking-widest">
-                  Users
+                <p className="text-muted-foreground text-[0.7rem] uppercase font-semibold tracking-widest">
+                  upload csv
                 </p>
               </NavLink>
             </li>
             <div className="">
               {subMenusList?.map((menu) => (
                 <div key={menu.name} className="flex flex-col gap-1">
-                  <AdSubmenu data={menu} />
+                  <CSubmenu data={menu} />
                 </div>
               ))}
             </div>
@@ -129,4 +146,4 @@ const AdSidebar = () => {
     </div>
   );
 };
-export default AdSidebar;
+export default CSidebar;

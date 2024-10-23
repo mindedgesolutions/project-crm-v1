@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 
 // Middlewares ------
 import errorHandlerMiddleware from "./server/middleware/errorHandlerMiddleware.js";
+import { protectAdminRoute } from "./server/middleware/authMiddleware.js";
 
 // Routes ------
 import authRoutes from "./server/routes/authRoutes.js";
@@ -35,7 +36,7 @@ app.use(express.json());
 
 // API starts ---
 app.use("/api/auth", authRoutes);
-app.use("/api/admin", adminRoutes);
+app.use("/api/admin", protectAdminRoute, adminRoutes);
 // API ends ---
 
 app.get("*", (req, res) => {

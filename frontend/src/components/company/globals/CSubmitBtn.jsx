@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { LoaderCircle } from "lucide-react";
 
-const AdSubmitBtn = ({ addClass, isLoading, text }) => {
+const CSubmitBtn = () => {
   return (
     <Button
       type="submit"
@@ -17,4 +17,4 @@ const AdSubmitBtn = ({ addClass, isLoading, text }) => {
     </Button>
   );
 };
-export default AdSubmitBtn;
+export default CSubmitBtn;

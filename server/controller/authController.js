@@ -4,7 +4,7 @@ import { BadRequestError } from "../errors/customErrors.js";
 import { checkPassword } from "../utils/passwordUtils.js";
 import { createJWT, verifyJWT } from "../utils/tokenUtils.js";
 
-// ------
+// Admin signin ------
 export const signIn = async (req, res) => {
   const { username, password, remember } = req.body;
 
@@ -49,7 +49,7 @@ export const signIn = async (req, res) => {
   res.status(StatusCodes.ACCEPTED).json({ data: user.rows[0], token: token });
 };
 
-// ------
+// Company signin ------
 export const cSignIn = async (req, res) => {
   const { username, password, remember } = req.body;
 
@@ -90,12 +90,23 @@ export const cSignIn = async (req, res) => {
   res.status(StatusCodes.ACCEPTED).json({ data: user.rows[0], token: token });
 };
 
-// ------
+// Admin current user ------
 export const currentUser = async (req, res) => {
   const { token_crm } = req.cookies;
   const { uuid } = verifyJWT(token_crm);
   const data = await pool.query(
     `select id, name, role, is_active, slug from users where uuid=$1`,
+    [uuid]
+  );
+  return res.status(StatusCodes.OK).json({ data });
+};
+
+// Company current user ------
+export const coCurrentUser = async (req, res) => {
+  const { token_crm } = req.cookies;
+  const { uuid } = verifyJWT(token_crm);
+  const data = await pool.query(
+    `select u.*, c.slug as cslug from users u join companies c on u.company_id = c.id where u.uuid=$1 and u.is_active=true and c.is_active=true`,
     [uuid]
   );
   return res.status(StatusCodes.OK).json({ data });
@@ -123,3 +134,5 @@ export const loginStatus = async (req, res) => {
   }
   res.status(StatusCodes.OK).json({ status });
 };
+
+// ------

@@ -63,8 +63,14 @@ const AdAddEditPlan = () => {
       showSuccess(msg);
       navigate(`/admin/masters/plans`);
     } catch (error) {
-      setIsLoading(false);
-      splitErrors(error?.response?.data?.msg);
+      setIsLoading(true);
+      if (error?.response?.status === 401) {
+        splitErrors(error?.response?.data?.msg);
+        navigate(`/`);
+      } else {
+        splitErrors(error?.response?.data?.msg);
+      }
+      return null;
     }
   };
 
