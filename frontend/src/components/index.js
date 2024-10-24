@@ -27,4 +27,5 @@ export { default as CSidebar } from "./company/globals/CSidebar";
 export { default as CFooter } from "./company/globals/CFooter";
 export { default as CSubmitBtn } from "./company/globals/CSubmitBtn";
 export { default as CProfileContainer } from "./company/globals/CProfileContainer";
+export { default as CNewGroupPopover } from "./company/users/CNewGroupPopover";
 // Company components end ------
