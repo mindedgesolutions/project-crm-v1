@@ -78,7 +78,7 @@ const AdAddEditPlan = () => {
     <AdContentWrapper>
       <div className="flex flex-row justify-between items-center bg-muted my-4 p-2">
         <h3 className="font-bold text-xl tracking-widest text-muted-foreground">
-          {plan ? `${plan.name} (Edit Plan)` : `Add New Plan`}
+          {plan ? `${plan.name} (Edit plan)` : `Add new plan`}
         </h3>
       </div>
       <div className="my-4">

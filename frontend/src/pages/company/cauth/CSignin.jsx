@@ -55,7 +55,7 @@ const CSignin = () => {
               CRM
             </h3>
           </div>
-          <Form method="post">
+          <Form method="post" autoComplete="off">
             <div className="flex flex-col space-y-4">
               <div className="w-full items-center gap-1.5">
                 <Label
