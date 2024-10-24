@@ -28,4 +28,6 @@ export { default as CLayout } from "./company/CLayout";
 export { default as CError } from "./company/CError";
 export { default as CListCsvUploads } from "./company/csv/CListCsvUploads";
 export { default as CUploadCsv } from "./company/csv/CUploadCsv";
+export { default as CListUsers } from "./company/cusers/CListUsers";
+export { default as CAddEditUser } from "./company/cusers/CAddEditUser";
 // Company pages end ------

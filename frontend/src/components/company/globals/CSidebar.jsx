@@ -112,9 +112,11 @@ const CSidebar = () => {
             </li>
             <li>
               <NavLink
-                to={`#`}
+                to={`/app/${currentUser.cslug}/users`}
                 className={`w-full flex flex-row justify-start items-center p-2 gap-3 rounded-lg hover:bg-card ${
-                  pathname === `#` ? "bg-card" : null
+                  pathname === `/app/${currentUser.cslug}/users`
+                    ? "bg-card"
+                    : null
                 }`}
               >
                 <Users2 size={15} className="text-muted-foreground" />
