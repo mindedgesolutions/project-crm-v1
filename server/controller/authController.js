@@ -94,6 +94,7 @@ export const cSignIn = async (req, res) => {
 export const currentUser = async (req, res) => {
   const { token_crm } = req.cookies;
   const { uuid } = verifyJWT(token_crm);
+
   const data = await pool.query(
     `select id, name, role, is_active, slug from users where uuid=$1`,
     [uuid]
